@@ -2,6 +2,7 @@ package com.kushPmakwana.mangia.Mangia.service;
 
 import com.kushPmakwana.mangia.Mangia.dto.request.CustomerRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.CustomerResponseDTO;
+import com.kushPmakwana.mangia.Mangia.dto.update.CustomerUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.dto.update.UserUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.enums.Role;
 import com.kushPmakwana.mangia.Mangia.exceptions.AlreadyExistsException;
@@ -41,7 +42,7 @@ public class CustomerService extends BaseService<Customer, CustomerRepository, C
     }
 
     @Transactional
-    public void update(UserUpdateDTO userUpdateDTO, Long id){
+    public void update(CustomerUpdateDTO customerUpdateDTO, Long id){
 
         var user = Utils.getAuthenticatedCustomer()
                 .orElseThrow(() -> new InvalidRoleException("Only Customer are allowed to update"));
@@ -52,27 +53,27 @@ public class CustomerService extends BaseService<Customer, CustomerRepository, C
             throw new UnmodifiableException("Cannot modify other's request", getEntityName());
         }
 
-        if(userUpdateDTO.getEmail() != null &&
-                !customer.getEmail().equals(userUpdateDTO.getEmail()) && repository.existsByEmail(userUpdateDTO.getEmail())){
+        if(customerUpdateDTO.getEmail() != null &&
+                !customer.getEmail().equals(customerUpdateDTO.getEmail()) && repository.existsByEmail(customerUpdateDTO.getEmail())){
             throw new AlreadyExistsException(getEntityName(), "EMAIL ALREADY IN USE");
         }
 
-        if(userUpdateDTO.getPhoneNumber() != null &&
-                !customer.getPhoneNumber().equals(userUpdateDTO.getPhoneNumber())
-                && repository.existsByPhoneNumber(userUpdateDTO.getPhoneNumber())){
+        if(customerUpdateDTO.getPhoneNumber() != null &&
+                !customer.getPhoneNumber().equals(customerUpdateDTO.getPhoneNumber())
+                && repository.existsByPhoneNumber(customerUpdateDTO.getPhoneNumber())){
             throw new AlreadyExistsException(getEntityName(), "PHONE NUMBER ALREADY IN USE");
         }
 
-        userService.update(customer.getEmail(), userUpdateDTO);
+        userService.update(customer.getEmail(), new UserUpdateDTO(customer.getEmail(), customerUpdateDTO.getPassword()));
 
-        if(userUpdateDTO.getEmail()!=null)
-            customer.setEmail(userUpdateDTO.getEmail());
-        if(userUpdateDTO.getFirstName()!=null)
-            customer.setFirstName(userUpdateDTO.getFirstName());
-        if(userUpdateDTO.getLastName()!=null)
-            customer.setSecondName(userUpdateDTO.getLastName());
-        if(userUpdateDTO.getPhoneNumber()!=null)
-            customer.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+        if(customerUpdateDTO.getEmail()!=null)
+            customer.setEmail(customerUpdateDTO.getEmail());
+        if(customerUpdateDTO.getFirstName()!=null)
+            customer.setFirstName(customerUpdateDTO.getFirstName());
+        if(customerUpdateDTO.getLastName()!=null)
+            customer.setSecondName(customerUpdateDTO.getLastName());
+        if(customerUpdateDTO.getPhoneNumber()!=null)
+            customer.setPhoneNumber(customerUpdateDTO.getPhoneNumber());
 
         repository.save(customer);
 

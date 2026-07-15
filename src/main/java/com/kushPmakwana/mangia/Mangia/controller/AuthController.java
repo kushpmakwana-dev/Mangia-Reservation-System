@@ -3,6 +3,7 @@ package com.kushPmakwana.mangia.Mangia.controller;
 import com.kushPmakwana.mangia.Mangia.dto.request.LoginRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.LoginResponse;
 import com.kushPmakwana.mangia.Mangia.security.UserPrincipal;
+import com.kushPmakwana.mangia.Mangia.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
     @PostMapping
     public ResponseEntity<?> login(
@@ -33,22 +34,7 @@ public class AuthController {
            HttpServletRequest request,
            HttpServletResponse response
     ){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        req.getEmail(),
-                        req.getPassword()
-                )
-        );
-
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-
-        HttpSessionSecurityContextRepository repository =
-                new HttpSessionSecurityContextRepository();
-
-        repository.saveContext(context, request, response);
-
+        Authentication authentication = authService.login(req, request, response);
         return ResponseEntity.ok(LoginResponse.build(authentication.getPrincipal()));
     }
 }

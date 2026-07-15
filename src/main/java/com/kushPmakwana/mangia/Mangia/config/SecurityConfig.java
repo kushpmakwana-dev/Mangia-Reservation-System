@@ -36,6 +36,9 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .exceptionHandling(e -> e
+//                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+//                        .accessDeniedHandler(customAccessDeniedHandler))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/",
                                         "/index.html",
@@ -47,6 +50,7 @@ public class SecurityConfig {
                                         "/*.svg",
                                         "/*.webp",
                                         "/api/customer/register",
+                                        "/auth",
                                         "/auth/**",
                                         "/error",
                                         "/logout").permitAll()
@@ -95,6 +99,22 @@ public class SecurityConfig {
                                     username,
                                     owner.getOwnerName(),
                                     Role.OWNER
+                            )
+                    );
+                }
+
+                case ADMIN -> {
+                    return new UserPrincipal(
+                            user.getId(),
+                            username,
+                            user.getPassword(),
+                            Role.ADMIN,
+                            new CurrentLoggedInUser(
+                                    null,
+                                    username,
+                                    "Kush Pradeep Makwana",
+                                    Role.ADMIN
+
                             )
                     );
                 }

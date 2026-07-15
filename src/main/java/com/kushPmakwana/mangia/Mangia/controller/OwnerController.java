@@ -6,6 +6,7 @@ import com.kushPmakwana.mangia.Mangia.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class OwnerController {
     private final OwnerService service;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> add(
             @Valid @RequestBody OwnerRequestDTO requestDTO
     ){
@@ -24,6 +26,7 @@ public class OwnerController {
     }
 
     @PatchMapping("{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OWNER')")
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @RequestBody OwnerUpdateDTO update

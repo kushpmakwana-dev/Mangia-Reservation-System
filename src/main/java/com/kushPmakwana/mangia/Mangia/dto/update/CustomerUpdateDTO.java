@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateDTO {
+public class CustomerUpdateDTO {
     @Email(message = "Enter the valid email") private String email;
     private String firstName;
     private String lastName;

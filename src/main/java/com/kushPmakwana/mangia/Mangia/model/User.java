@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.TrueFalseConverter;
 
 @Entity
 @Table(
@@ -30,5 +31,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Convert(converter = TrueFalseConverter.class)
     private boolean isActive = true;
 }

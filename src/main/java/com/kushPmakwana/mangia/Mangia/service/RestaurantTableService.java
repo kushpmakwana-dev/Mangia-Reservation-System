@@ -7,6 +7,7 @@ import com.kushPmakwana.mangia.Mangia.dto.update.RestaurantTableUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.enums.TableStatus;
 import com.kushPmakwana.mangia.Mangia.exceptions.AlreadyExistsException;
 import com.kushPmakwana.mangia.Mangia.exceptions.CustomException;
+import com.kushPmakwana.mangia.Mangia.exceptions.TableNotAvailableException;
 import com.kushPmakwana.mangia.Mangia.model.RestaurantTable;
 import com.kushPmakwana.mangia.Mangia.repository.RestaurantTableRepository;
 import org.springframework.data.domain.Page;
@@ -48,23 +49,13 @@ public class RestaurantTableService extends BaseService<RestaurantTable, Restaur
 
     }
 
-    public void setBooked(Long id){
-        updateStatus(id, TableStatus.BOOKED);
-    }
-
-    public void setAvailable(Long id){
-        updateStatus(id, TableStatus.AVAILABLE);
-    }
-
-    public void setUnderMaintenance(Long id){
-        updateStatus(id, TableStatus.UNDER_MAINTENANCE);
-    }
-
     public RestaurantTable fetchAvailableTable(int noOfGuests){
-        RestaurantTable table = repository.findFirstByCapacityGreaterThanEqualAndStatusOrderByCapacityAsc(noOfGuests, TableStatus.AVAILABLE)
-                                    .orElseThrow(() -> new RuntimeException("No table are currently available"));
-        setBooked(table.getId());
-        return table;
+        return repository.findFirstByCapacityGreaterThanEqualAndStatusOrderByCapacityAsc(noOfGuests, TableStatus.IN_SERVICE)
+                                    .orElseThrow(() -> new TableNotAvailableException("No table are currently available"));
+    }
+
+    public List<RestaurantTable> fetchAllTableByCapacity(int noOfGuests){
+        return repository.findAllByCapacity(noOfGuests);
     }
 
     public ListResponse<RestaurantTableResponseDTO> search(
