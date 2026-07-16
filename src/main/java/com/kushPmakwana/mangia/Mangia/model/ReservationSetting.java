@@ -37,7 +37,7 @@ public class ReservationSetting {
     @Column(nullable = false)
     private String contactPhone;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User owner;
+//    @OneToOne
+//    @JoinColumn(name = "user_id")
+//    private User owner;
 }

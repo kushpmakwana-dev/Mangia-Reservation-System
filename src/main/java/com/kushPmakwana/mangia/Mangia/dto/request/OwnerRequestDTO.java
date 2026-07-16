@@ -10,7 +10,6 @@ public class OwnerRequestDTO {
 
     @NotBlank(message = "name cannot be blank")
     private String ownerName;
-
     @NotBlank(message = "phone cannot be blank")
     @Size(min = 10, max = 10)
     private String ownerPhone;

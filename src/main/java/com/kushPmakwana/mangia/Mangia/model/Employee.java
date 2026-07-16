@@ -30,7 +30,5 @@ public class Employee {
 
     @Column(nullable = false, unique = true)
     private String employeePhone;
-//
-//    @Column(nullable = false)
-//    private String password;
+
 }

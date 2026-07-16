@@ -3,13 +3,13 @@ package com.kushPmakwana.mangia.Mangia.service;
 import com.kushPmakwana.mangia.Mangia.dto.request.OwnerRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.OwnerResponseDTO;
 import com.kushPmakwana.mangia.Mangia.dto.update.OwnerUpdateDTO;
+import com.kushPmakwana.mangia.Mangia.dto.update.CustomerUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.dto.update.UserUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.enums.Role;
 import com.kushPmakwana.mangia.Mangia.exceptions.AlreadyExistsException;
 import com.kushPmakwana.mangia.Mangia.exceptions.CustomException;
 import com.kushPmakwana.mangia.Mangia.exceptions.InvalidRoleException;
 import com.kushPmakwana.mangia.Mangia.model.Owner;
-import com.kushPmakwana.mangia.Mangia.model.User;
 import com.kushPmakwana.mangia.Mangia.repository.OwnerRepository;
 import com.kushPmakwana.mangia.Mangia.utility.Utils;
 import jakarta.transaction.Transactional;
@@ -45,7 +45,7 @@ public class OwnerService extends BaseService<Owner, OwnerRepository, OwnerReque
 
     @Transactional
     public void update(Long id, OwnerUpdateDTO update){
-        var user = Utils.getAuthenticatedOwner()
+        var user = Utils.getAuthenticatedOwnerOrAdmin()
                 .orElseThrow(() -> new InvalidRoleException("ONLY OWNER IS ALLOWED TO UPDATE"));
 
         Owner owner = findEntityById(id);
@@ -69,10 +69,10 @@ public class OwnerService extends BaseService<Owner, OwnerRepository, OwnerReque
         }
 
         if(update.getOwnerEmail() != null || update.getOwnerPhone() != null){
-            UserUpdateDTO updateDTO = new UserUpdateDTO();
+            CustomerUpdateDTO updateDTO = new CustomerUpdateDTO();
             updateDTO.setEmail(update.getOwnerEmail());
             updateDTO.setPhoneNumber(update.getOwnerPhone());
-            userService.update(oldEmail, updateDTO);
+            userService.update(oldEmail, new UserUpdateDTO(update.getOwnerEmail(), updateDTO.getPassword()));
         }
 
         if(update.getOwnerName() != null)

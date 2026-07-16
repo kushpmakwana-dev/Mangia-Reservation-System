@@ -1,7 +1,7 @@
 package com.kushPmakwana.mangia.Mangia.controller;
 
 import com.kushPmakwana.mangia.Mangia.dto.request.CustomerRequestDTO;
-import com.kushPmakwana.mangia.Mangia.dto.update.UserUpdateDTO;
+import com.kushPmakwana.mangia.Mangia.dto.update.CustomerUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,9 @@ public class CustomerController {
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
     public ResponseEntity<?> update(
             @PathVariable Long id,
-            @Valid @RequestBody UserUpdateDTO userUpdateDTO
+            @Valid @RequestBody CustomerUpdateDTO customerUpdateDTO
     ){
-        service.update(userUpdateDTO, id);
+        service.update(customerUpdateDTO, id);
         return ResponseEntity.ok("USER UPDATED SUCCESSFULLY");
     }
 

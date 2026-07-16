@@ -3,6 +3,7 @@ package com.kushPmakwana.mangia.Mangia.service;
 import com.kushPmakwana.mangia.Mangia.dto.request.ReservationSettingRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.ReservationSettingResponseDTO;
 import com.kushPmakwana.mangia.Mangia.exceptions.InvalidRoleException;
+import com.kushPmakwana.mangia.Mangia.exceptions.ResourcesNotFoundException;
 import com.kushPmakwana.mangia.Mangia.exceptions.UnmodifiableException;
 import com.kushPmakwana.mangia.Mangia.model.ReservationSetting;
 import com.kushPmakwana.mangia.Mangia.repository.ReservationRepository;
@@ -22,8 +23,8 @@ public class ReservationSettingService extends BaseService<ReservationSetting, R
     }
 
     public void add(ReservationSettingRequestDTO requestDTO){
-//        var user = Utils.getAuthenticatedOwner()
-//                .orElseThrow(()-> new InvalidRoleException("ONLY OWNER IS ALLOWED TO ADD SETTINGS"));
+        var user = Utils.getAuthenticatedOwner()
+                .orElseThrow(()-> new InvalidRoleException("ONLY OWNER IS ALLOWED TO ADD SETTINGS"));
 
         Optional<ReservationSetting> setting = repository.findFirstBy();
 
@@ -49,12 +50,17 @@ public class ReservationSettingService extends BaseService<ReservationSetting, R
         ReservationSetting setting = repository.findFirstBy()
                 .orElseThrow(() ->
                         new RuntimeException("Reservation settings not configured"));
-        if(bookingTime.isAfter(setting.getCloseTime())
-                || bookingTime.isBefore(setting.getOpeningTime())){
-            return false;
-        }
-        return true;
+        return !bookingTime.isAfter(setting.getCloseTime())
+                && !bookingTime.isBefore(setting.getOpeningTime());
     }
+
+    public int maxAllowedOfGuests(){
+        return repository.findFirstBy()
+                .orElseThrow(() ->
+                        new ResourcesNotFoundException("No Setting existed", getEntityName())).getMaxGuestsPerReservation();
+    }
+
+
 
     @Override
     public ReservationSettingResponseDTO toResponse(ReservationSetting entity) {

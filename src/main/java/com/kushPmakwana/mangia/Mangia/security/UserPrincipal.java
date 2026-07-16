@@ -13,7 +13,7 @@ public class UserPrincipal implements UserDetails {
 
     private final Long userId;
     private final String username;
-    private final String password;
+    private  String password;
     private final Role role;
     private final CurrentLoggedInUser user;
 
@@ -21,6 +21,13 @@ public class UserPrincipal implements UserDetails {
         this.userId = userId;
         this.username = username;
         this.password = password;
+        this.role = role;
+        this.user = user;
+    }
+
+    public UserPrincipal(Long userId, String username, Role role, CurrentLoggedInUser user){
+        this.userId = userId;
+        this.username = username;
         this.role = role;
         this.user = user;
     }

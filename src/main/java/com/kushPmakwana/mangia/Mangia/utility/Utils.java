@@ -45,4 +45,11 @@ public class Utils {
                 .filter(principal ->
                         Role.ADMIN.equals(principal.getRole()));
     }
+
+    public static Optional<UserPrincipal> getAuthenticatedOwnerOrAdmin(){
+        return getPrincipal()
+                .filter(p ->
+                        Role.ADMIN == p.getRole()
+                          || Role.OWNER == p.getRole());
+    }
 }

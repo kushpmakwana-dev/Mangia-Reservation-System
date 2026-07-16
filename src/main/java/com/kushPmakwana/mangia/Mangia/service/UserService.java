@@ -1,5 +1,6 @@
 package com.kushPmakwana.mangia.Mangia.service;
 
+import com.kushPmakwana.mangia.Mangia.dto.update.CustomerUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.dto.update.UserUpdateDTO;
 import com.kushPmakwana.mangia.Mangia.enums.Role;
 import com.kushPmakwana.mangia.Mangia.exceptions.AlreadyExistsException;
