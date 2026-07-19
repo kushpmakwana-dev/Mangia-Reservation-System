@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Component/Navbar";
 import Providers from "@/Component/Providers";
+import CustomCursor from "@/Component/custom_cursor/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
       className={`text-poppins h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+          <CustomCursor />
         <Providers>
           <Navbar />
           {children}
