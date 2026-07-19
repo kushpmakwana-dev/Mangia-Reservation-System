@@ -27,7 +27,7 @@ const featuredCategory = () => {
           animate={"animate"}
           className="text-6xl font-bold"
         >
-          FEATURED CATEGORY
+        FEATURED CATEGORY
         </motion.h1>
       </div>
       <div className="card-wrap mt-10 grid grid-cols-4 gap-10">

@@ -82,7 +82,9 @@ const Banner = () => {
               whileTap={{
                 scale: 0.95,
               }}
-              className="bg-accent text-white px-7 py-4 rounded-xl text-lg font-semibold"
+              className="bg-accent text-white px-7 py-4 rounded-xl text-lg font-semibold
+              shadow-[5px_10px_10px_black]
+              "
             >
               Order Now
             </motion.button>
@@ -94,7 +96,10 @@ const Banner = () => {
               whileTap={{
                 scale: 0.95,
               }}
-              className="border-2 border-accent text-accent px-7 py-4 rounded-xl text-lg font-semibold"
+              className=" border-accent text-accent px-7 py-4 rounded-xl text-lg font-semibold
+                            shadow-[5px_10px_10px_gray]
+
+              "
             >
               Explore Menu
             </motion.button>
