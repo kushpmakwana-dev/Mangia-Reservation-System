@@ -21,9 +21,16 @@ public class LoginResponse {
                 case OWNER -> {
                     map.put(Role.OWNER.toString(), user.getUser());
                 }
+                case ADMIN -> {
+                    map.put(Role.ADMIN.toString(), user.getUser());
+                }
+                case EMPLOYEE -> {
+                    map.put(Role.EMPLOYEE.toString(), user.getUser());
+                }
                 default -> throw new InvalidRoleException("Enter Valid role");
             }
         }
+
         return Map.of("authenticatedUsers", map);
     }
 }

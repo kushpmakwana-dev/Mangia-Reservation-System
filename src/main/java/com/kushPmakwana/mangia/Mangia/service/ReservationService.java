@@ -2,11 +2,9 @@ package com.kushPmakwana.mangia.Mangia.service;
 
 import com.kushPmakwana.mangia.Mangia.dto.request.ReservationRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.ReservationResponseDTO;
+import com.kushPmakwana.mangia.Mangia.enums.ReservationStatus;
 import com.kushPmakwana.mangia.Mangia.enums.ReservationType;
-import com.kushPmakwana.mangia.Mangia.exceptions.InvalidRoleException;
-import com.kushPmakwana.mangia.Mangia.exceptions.TableNotAvailableException;
-import com.kushPmakwana.mangia.Mangia.exceptions.UnAuthorizedException;
-import com.kushPmakwana.mangia.Mangia.exceptions.UnmodifiableException;
+import com.kushPmakwana.mangia.Mangia.exceptions.*;
 import com.kushPmakwana.mangia.Mangia.model.Customer;
 import com.kushPmakwana.mangia.Mangia.model.RestaurantTable;
 import com.kushPmakwana.mangia.Mangia.utility.Utils;
@@ -16,7 +14,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,10 +72,95 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
         return toResponse(newReservation);
     }
 
+    @Transactional
+    public void cancel(Long id){
+        var user  = Utils.getAuthenticatedCustomer().orElseThrow(()-> new UnAuthorizedException("ONLY CUSTOMERS ARE ALLOWED TO PERFORM CANCELLATIONS"));
+
+        Reservation reservation = repository.findById(id).orElseThrow(() -> new ResourcesNotFoundException("Resource Not found", getEntityName()));
+
+        if(!reservation.getBookedBy().getId().equals(user.getUser().getId())){
+            throw new UnAuthorizedException("YOU ARE NOT ALLOWED TO PERFORM CANCELLATION ON SOMEONE ELSE'S RESERVATIONS");
+        }
+
+        if(reservation.getStatus() == ReservationStatus.ARRIVED || reservation.getStatus() == ReservationStatus.EXPIRED || reservation.getStatus() == ReservationStatus.COMPLETED){
+            throw new UnmodifiableException("YOU CANNOT CANCEL THE RESERVATIONS AT THIS STAGE", getEntityName());
+        }
+
+        if(reservation.getStatus() == ReservationStatus.CANCELLED){
+            throw new UnmodifiableException("RESERVATION HAS ALREADY BEEN CANCELLED", getEntityName());
+        }
+
+        LocalDateTime currentTime = LocalDateTime.now(),
+        reservationTimeAndDate = reservation.getReservationTime().atDate(reservation.getReservationDate());
+
+        if(!currentTime.isBefore(reservationTimeAndDate.minusMinutes(30))){
+            throw new UnmodifiableException("YOU CANNOT CANCEL THE RESERVATION 30 MINS BEFORE THE RESERVATION TIME", getEntityName());
+        }
+
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        repository.save(reservation);
+    }
+
+    @Transactional
+    public void confirm(Long id){
+        var user = Utils.getOwnerOrEmployee().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER OR EMPLOYEE ARE ALLOWED TO CONFIRM"));
+
+        Reservation reservation = findEntityById(id);
+
+        LocalDateTime reservationTime = reservation.getReservationTime().atDate(reservation.getReservationDate());
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if(currentTime.isAfter(reservationTime)) {
+            throw new UnmodifiableException("RESERVATION TIME HAS ALREADY PASSED", getEntityName());
+        }
+
+        if(reservation.getStatus()!=ReservationStatus.PENDING){
+            throw new UnmodifiableException("You cannot confirm the booking at this stage", getEntityName());
+        }
+
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        repository.save(reservation);
+    }
+
+    @Transactional
+    public void markedArrived(Long id){
+        var user = Utils.getOwnerOrEmployee().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER OR EMPLOYEE ARE ALLOWED TO CONFIRM"));
+
+        Reservation reservation = findEntityById(id);
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime reservationValidity = reservation.getReservationValidTill();
+        LocalDateTime reservationTime = reservation.getReservationTime().atDate(reservation.getReservationDate());
+
+        if(currentTime.isAfter(reservationValidity) || currentTime.isBefore(reservationTime)){
+            throw new UnmodifiableException("Reservation Validity has already been expired", getEntityName());
+        }
+
+        if(reservation.getStatus()!=ReservationStatus.CONFIRMED){
+            throw new UnmodifiableException("YOU CANNOT MARK A UN-CONFIRMED TABLE AS ARRIVED", getEntityName());
+        }
+
+        reservation.setStatus(ReservationStatus.ARRIVED);
+        repository.save(reservation);
+
+    }
+
+    public void markedAsCompleted(Long id){
+        var user = Utils.getOwnerOrEmployee().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER OR EMPLOYEE ARE ALLOWED TO CONFIRM"));
+
+        Reservation reservation = findEntityById(id);
+
+        if(reservation.getStatus() != ReservationStatus.ARRIVED){
+            throw new UnmodifiableException("YOU CANNOT MARK THE RESERVATION AS COMPLETE AT THIS STAGE", getEntityName());
+        }
+
+        reservation.setStatus(ReservationStatus.COMPLETED);
+    }
+
 
     /*
     * Helper Methods
-    * */
+    */
 
     private RestaurantTable fetchValidTable(
             List<RestaurantTable> tables,
@@ -85,10 +170,15 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
         if(tables.isEmpty()) throw new TableNotAvailableException("NO TABLE WITH REQUIRED CAPACITY IS AVAILABLE");
 
         for(RestaurantTable table : tables){
-            boolean reserved = repository.existsByTableAndReservationDateAndReservationTime(
+            boolean reserved = repository.existsByTableAndReservationDateAndReservationTimeAndStatusIn(
                     table,
                     reservationDate,
-                    reservationTime
+                    reservationTime,
+                    List.of(
+                            ReservationStatus.PENDING,
+                            ReservationStatus.CONFIRMED,
+                            ReservationStatus.ARRIVED
+                    )
             );
 
             if(!reserved){
@@ -100,7 +190,7 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
     }
 
     @Override
-    public ReservationResponseDTO toResponse(Reservation entity) {
+    protected ReservationResponseDTO toResponse(Reservation entity) {
         return ReservationResponseDTO.builder()
                 .id(entity.getId())
                 .emailId(entity.getEmailId())
@@ -118,7 +208,7 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
     }
 
     @Override
-    public Reservation toEntity(ReservationRequestDTO request) {
+    protected Reservation toEntity(ReservationRequestDTO request) {
         Reservation reservation = new Reservation();
         reservation.setFirstName(request.getFirstName());
         reservation.setLastName(request.getSecondName());

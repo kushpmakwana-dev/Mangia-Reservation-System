@@ -14,8 +14,8 @@ public abstract class BaseService<T, R extends JpaRepository<T, Long>, REQ, RES>
         this.repository = repository;
     }
 
-    public abstract RES toResponse(T entity);
-    public abstract T toEntity(REQ request);
+    protected abstract RES toResponse(T entity);
+    protected abstract T toEntity(REQ request);
 
     public List<RES> getAll(){
         return repository.findAll()

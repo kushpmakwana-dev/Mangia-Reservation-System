@@ -35,30 +35,6 @@ public class RestaurantTableController {
         return ResponseEntity.ok("TABLE HAS BEEN UPDATED");
     }
 
-    @PatchMapping("/booked/{id}")
-    public ResponseEntity<?> booked(
-            @PathVariable Long id
-    ){
-        restaurantTableService.setBooked(id);
-        return ResponseEntity.ok("TABLE IS BOOKED");
-    }
-
-    @PatchMapping("/available/{id}")
-    public ResponseEntity<?> available(
-            @PathVariable Long id
-    ){
-        restaurantTableService.setAvailable(id);
-        return ResponseEntity.ok("TABLE IS AVAILABLE");
-    }
-
-    @PatchMapping("/maintenance/{id}")
-    public ResponseEntity<?> underMaintenance(
-            @PathVariable Long id
-    ){
-        restaurantTableService.setUnderMaintenance(id);
-        return ResponseEntity.ok("TABLE IS UNDER MAINTENANCE");
-    }
-
     @GetMapping
     public ResponseEntity<?> search(
             @RequestParam(required = false) String search,

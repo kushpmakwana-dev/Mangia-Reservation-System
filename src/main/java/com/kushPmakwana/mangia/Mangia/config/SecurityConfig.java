@@ -4,9 +4,11 @@ import com.kushPmakwana.mangia.Mangia.enums.Role;
 import com.kushPmakwana.mangia.Mangia.exceptions.InvalidRoleException;
 import com.kushPmakwana.mangia.Mangia.exceptions.ResourcesNotFoundException;
 import com.kushPmakwana.mangia.Mangia.model.Customer;
+import com.kushPmakwana.mangia.Mangia.model.Employee;
 import com.kushPmakwana.mangia.Mangia.model.Owner;
 import com.kushPmakwana.mangia.Mangia.model.User;
 import com.kushPmakwana.mangia.Mangia.repository.CustomerRepository;
+import com.kushPmakwana.mangia.Mangia.repository.EmployeeRepository;
 import com.kushPmakwana.mangia.Mangia.repository.OwnerRepository;
 import com.kushPmakwana.mangia.Mangia.repository.UserRepository;
 import com.kushPmakwana.mangia.Mangia.security.CurrentLoggedInUser;
@@ -66,7 +68,8 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(
             CustomerRepository customerRepository,
             UserRepository userRepository,
-            OwnerRepository ownerRepository
+            OwnerRepository ownerRepository,
+            EmployeeRepository employeeRepository
     ) {
         return username -> {
             User user = userRepository.findByEmail(username).orElseThrow(() -> new ResourcesNotFoundException("User Not Found", "SECURITY"));
@@ -115,6 +118,23 @@ public class SecurityConfig {
                                     "Kush Pradeep Makwana",
                                     Role.ADMIN
 
+                            )
+                    );
+                }
+
+                case EMPLOYEE -> {
+                    Employee employee = employeeRepository.findByEmployeeEmail(username)
+                            .orElseThrow(() -> new ResourcesNotFoundException("Employee Not Found", "USER-LOGIN"));
+                    return new UserPrincipal(
+                            user.getId(),
+                            username,
+                            user.getPassword(),
+                            Role.EMPLOYEE,
+                            new CurrentLoggedInUser(
+                                    employee.getId(),
+                                    username,
+                                    employee.getEmployeeFirstName() + " " + employee.getEmployeeLastName(),
+                                    Role.EMPLOYEE
                             )
                     );
                 }

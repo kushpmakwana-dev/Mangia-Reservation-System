@@ -1,5 +1,6 @@
 package com.kushPmakwana.mangia.Mangia.repository;
 
+import com.kushPmakwana.mangia.Mangia.enums.ReservationStatus;
 import com.kushPmakwana.mangia.Mangia.enums.ReservationType;
 import com.kushPmakwana.mangia.Mangia.model.Customer;
 import com.kushPmakwana.mangia.Mangia.model.Reservation;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -29,9 +31,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             ReservationType reservationType
     );
 
-    boolean existsByTableAndReservationDateAndReservationTime(
+    boolean existsByTableAndReservationDateAndReservationTimeAndStatusIn(
             RestaurantTable table,
             LocalDate reservationDate,
-            LocalTime reservationTime
+            LocalTime reservationTime,
+            Collection<ReservationStatus> statuses
     );
 }
