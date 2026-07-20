@@ -52,6 +52,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             Pageable pageable
     );
 
+    @Query(
+            """
+            SELECT r FROM Reservation r
+            WHERE r.bookedBy.id = :id
+            AND (:status IS NULL OR r.status = :status)
+            AND (:date IS NULL OR r.reservationDate = :date)
+            ORDER BY r.reservationDate DESC, r.reservationTime DESC
+            """
+    )
+    Page<Reservation> searchCustomerReservations(
+            @Param("id") Long id,
+            @Param("status") ReservationStatus status,
+            @Param("date") LocalDate date,
+            Pageable pageable
+    );
+
     boolean existsByBookedByAndReservationDateAndReservationTimeAndReservationType(
             Customer customer,
             LocalDate date,

@@ -187,7 +187,28 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
                         .toList();
 
         return new ListResponse<ReservationResponseDTO>(page, data);
+    }
 
+    public ListResponse<ReservationResponseDTO> searchCustomer(
+            ReservationStatus reservationStatus,
+            LocalDate date,
+            Pageable pageable
+    ){
+        var user = Utils.getAuthenticatedCustomer().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER AND EMPLOYEE ARE ALLOWED TO PERFORM THIS ACTION"));
+
+        Page<Reservation> page = repository.searchCustomerReservations(
+                user.getUser().getId(),
+                reservationStatus,
+                date,
+                pageable
+        );
+
+        List<ReservationResponseDTO> data =
+                page.getContent().stream()
+                        .map(this::toResponse)
+                        .toList();
+
+        return new ListResponse<ReservationResponseDTO>(page, data);
     }
 
     /*

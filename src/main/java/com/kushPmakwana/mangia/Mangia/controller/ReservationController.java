@@ -86,4 +86,21 @@ public class ReservationController {
             pageable
         ));
     }
+
+    @GetMapping("self")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<?> searchCustomer(
+            @RequestParam(required = false) ReservationStatus status,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "1") int pageNo
+    ){
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.searchCustomer(
+                status,
+                date,
+                pageable
+        ));
+    }
 }
