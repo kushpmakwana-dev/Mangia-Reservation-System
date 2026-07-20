@@ -3,7 +3,7 @@ import {motion} from "framer-motion"
 import { div, section } from "framer-motion/client"
 import { Heart } from "lucide-react"
 import Image from "next/image"
-import { addToCart , removeFromCart } from "@/redux/cartSlice"
+import { addToCart , removeFromCart } from "@/redux/slices/cartSlice"
 import { useDispatch , useSelector } from "react-redux"
 const Card = () => {
     const cart = useSelector((state)=>state.cart.items)
