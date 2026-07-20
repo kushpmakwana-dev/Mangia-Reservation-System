@@ -2,13 +2,18 @@ package com.kushPmakwana.mangia.Mangia.controller;
 
 import com.kushPmakwana.mangia.Mangia.dto.request.ReservationRequestDTO;
 import com.kushPmakwana.mangia.Mangia.dto.response.ReservationResponseDTO;
+import com.kushPmakwana.mangia.Mangia.enums.ReservationStatus;
 import com.kushPmakwana.mangia.Mangia.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -59,5 +64,26 @@ public class ReservationController {
     ){
         service.markedAsCompleted(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("RESERVATION HAS BEEN CONFIRMED");
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_EMPLOYEE', 'ROLE_OWNER')")
+    public ResponseEntity<?> search(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) ReservationStatus status,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(required = false) int totalNumberOfPeople,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "1") int pageNo
+            ){
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.search(
+            search,
+            status,
+            date,
+            totalNumberOfPeople,
+            pageable
+        ));
     }
 }

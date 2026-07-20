@@ -1,9 +1,11 @@
 package com.kushPmakwana.mangia.Mangia.service;
 
 import com.kushPmakwana.mangia.Mangia.dto.request.ReservationRequestDTO;
+import com.kushPmakwana.mangia.Mangia.dto.response.ListResponse;
 import com.kushPmakwana.mangia.Mangia.dto.response.ReservationResponseDTO;
 import com.kushPmakwana.mangia.Mangia.enums.ReservationStatus;
 import com.kushPmakwana.mangia.Mangia.enums.ReservationType;
+import com.kushPmakwana.mangia.Mangia.enums.TableStatus;
 import com.kushPmakwana.mangia.Mangia.exceptions.*;
 import com.kushPmakwana.mangia.Mangia.model.Customer;
 import com.kushPmakwana.mangia.Mangia.model.RestaurantTable;
@@ -11,6 +13,9 @@ import com.kushPmakwana.mangia.Mangia.utility.Utils;
 import com.kushPmakwana.mangia.Mangia.model.Reservation;
 import com.kushPmakwana.mangia.Mangia.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
+//import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -145,6 +150,7 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
 
     }
 
+    @Transactional
     public void markedAsCompleted(Long id){
         var user = Utils.getOwnerOrEmployee().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER OR EMPLOYEE ARE ALLOWED TO CONFIRM"));
 
@@ -155,8 +161,34 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
         }
 
         reservation.setStatus(ReservationStatus.COMPLETED);
+        repository.save(reservation);
     }
 
+    public ListResponse<ReservationResponseDTO> search(
+            String search,
+            ReservationStatus reservationStatus,
+            LocalDate date,
+            int totalNumberOfPeople,
+            Pageable pageable
+    ){
+        var user = Utils.getOwnerOrEmployee().orElseThrow(() -> new UnAuthorizedException("ONLY OWNER AND EMPLOYEE ARE ALLOWED TO PERFORM THIS ACTION"));
+
+        Page<Reservation> page = repository.search(
+                search,
+                reservationStatus,
+                date,
+                totalNumberOfPeople,
+                pageable
+        );
+
+        List<ReservationResponseDTO> data =
+                page.getContent().stream()
+                        .map(this::toResponse)
+                        .toList();
+
+        return new ListResponse<ReservationResponseDTO>(page, data);
+
+    }
 
     /*
     * Helper Methods
@@ -187,6 +219,22 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
         }
 
         throw new TableNotAvailableException("No table is available for your time slot");
+    }
+
+    private Page<Reservation> searchAll(
+            String search,
+            ReservationStatus status,
+            LocalDate date,
+            int totalNumberOfPeople,
+            Pageable pageable
+    ){
+        return repository.search(
+                search,
+                status,
+                date,
+                totalNumberOfPeople,
+                pageable
+        );
     }
 
     @Override
