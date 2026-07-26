@@ -1,17 +1,21 @@
 'use client';
 
 import { motion } from "framer-motion";
-import { HeartIcon, LucideShoppingBag } from "lucide-react";
+import { HeartIcon, LucideShoppingBag, UserPen } from "lucide-react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const countCartItems = useSelector((state) => state.cart.cartCount);
-  const favouriteCartItems = useSelector(
-    (state) => state.cart.favouriteCount
-  );
 
+  const countCartItems = useSelector((state) => state.cart.count);
+  const favouriteCartItems = useSelector(
+    (state) => state.cart.favCount
+  );
+  const navigate = useRouter();
+
+  console.log(countCartItems)
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -96,6 +100,9 @@ const Navbar = () => {
 
         {/* Sign Up */}
         <motion.button
+        onClick={()=>{
+          navigate.push("/auth/login")
+        }}
           whileTap={{ scale: 0.9 }}
           className="w-20 rounded-full bg-accent p-2.5 text-xs text-background transition-all duration-300 hover:bg-foreground"
         >

@@ -1,5 +1,4 @@
-{
-  "products": [
+ [
     {
       "id": 1,
       "name": "Classic Burger",
@@ -271,4 +270,3 @@
       "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
     }
   ]
-}

@@ -30,11 +30,7 @@ const featuredCategory = () => {
         FEATURED CATEGORY
         </motion.h1>
       </div>
-      <div className="card-wrap mt-10 grid grid-cols-4 gap-10">
-        
-      <Card/>
-      <Card/>
-      <Card/>
+      <div className="w-full mt-10">
       <Card/>
       </div>
     </section>
