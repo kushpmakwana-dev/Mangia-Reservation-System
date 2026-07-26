@@ -1,0 +1,274 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Classic Burger",
+      "price": 250,
+      "rating": 4.5,
+      "category": "Popular",
+      "description": "Juicy grilled patty with fresh lettuce, tomatoes, cheese and signature sauce.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Cheese Burger",
+      "price": 280,
+      "rating": 4.7,
+      "category": "Popular",
+      "description": "Loaded with double cheese and fresh veggies.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Chicken Burger",
+      "price": 300,
+      "rating": 4.6,
+      "category": "Best Seller",
+      "description": "Crispy chicken fillet with creamy mayo.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Veg Burger",
+      "price": 220,
+      "rating": 4.3,
+      "category": "Veg",
+      "description": "Healthy veggie patty with fresh vegetables.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Paneer Burger",
+      "price": 270,
+      "rating": 4.5,
+      "category": "Veg",
+      "description": "Soft paneer patty with spicy sauces.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Spicy Burger",
+      "price": 290,
+      "rating": 4.4,
+      "category": "Hot",
+      "description": "Perfect for spicy food lovers.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 7,
+      "name": "BBQ Burger",
+      "price": 320,
+      "rating": 4.8,
+      "category": "BBQ",
+      "description": "Smoky BBQ flavor with grilled patty.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Double Patty Burger",
+      "price": 380,
+      "rating": 4.9,
+      "category": "Premium",
+      "description": "Two juicy patties with extra cheese.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 9,
+      "name": "Mushroom Burger",
+      "price": 310,
+      "rating": 4.5,
+      "category": "Special",
+      "description": "Sauteed mushrooms with creamy sauce.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Mexican Burger",
+      "price": 330,
+      "rating": 4.6,
+      "category": "Special",
+      "description": "Mexican spices with crunchy veggies.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Italian Burger",
+      "price": 340,
+      "rating": 4.7,
+      "category": "Premium",
+      "description": "Italian herbs and mozzarella cheese.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Peri Peri Burger",
+      "price": 295,
+      "rating": 4.4,
+      "category": "Hot",
+      "description": "Spicy peri peri sauce with grilled patty.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 13,
+      "name": "Tandoori Burger",
+      "price": 315,
+      "rating": 4.6,
+      "category": "Indian",
+      "description": "Tandoori flavored patty with mint sauce.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 14,
+      "name": "Crunchy Burger",
+      "price": 260,
+      "rating": 4.2,
+      "category": "Popular",
+      "description": "Extra crispy patty with crunchy lettuce.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 15,
+      "name": "Bacon Burger",
+      "price": 390,
+      "rating": 4.8,
+      "category": "Premium",
+      "description": "Loaded with crispy bacon and cheese.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 16,
+      "name": "Smoky Burger",
+      "price": 335,
+      "rating": 4.6,
+      "category": "BBQ",
+      "description": "Rich smoky flavor with grilled onions.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 17,
+      "name": "Fish Burger",
+      "price": 360,
+      "rating": 4.5,
+      "category": "Sea Food",
+      "description": "Crispy fish fillet with tartar sauce.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 18,
+      "name": "Loaded Burger",
+      "price": 410,
+      "rating": 4.9,
+      "category": "Premium",
+      "description": "Everything you love in one burger.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 19,
+      "name": "Classic Chicken",
+      "price": 310,
+      "rating": 4.6,
+      "category": "Popular",
+      "description": "Grilled chicken with fresh vegetables.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 20,
+      "name": "Jumbo Burger",
+      "price": 430,
+      "rating": 4.9,
+      "category": "Premium",
+      "description": "A giant burger for huge appetites.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 21,
+      "name": "Cheesy Delight",
+      "price": 285,
+      "rating": 4.4,
+      "category": "Popular",
+      "description": "Extra cheese in every bite.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 22,
+      "name": "Onion Burger",
+      "price": 255,
+      "rating": 4.2,
+      "category": "Special",
+      "description": "Caramelized onions with juicy patty.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 23,
+      "name": "Supreme Burger",
+      "price": 450,
+      "rating": 5.0,
+      "category": "Premium",
+      "description": "Our signature premium burger.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 24,
+      "name": "Mini Burger",
+      "price": 180,
+      "rating": 4.1,
+      "category": "Kids",
+      "description": "Small but delicious burger.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 25,
+      "name": "Cheese Blast",
+      "price": 350,
+      "rating": 4.8,
+      "category": "Premium",
+      "description": "Overflowing with melted cheese.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 26,
+      "name": "Green Burger",
+      "price": 275,
+      "rating": 4.3,
+      "category": "Veg",
+      "description": "Fresh spinach and veggie patty.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 27,
+      "name": "Hot Crunch Burger",
+      "price": 305,
+      "rating": 4.6,
+      "category": "Hot",
+      "description": "Crunchy and spicy combination.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    },
+    {
+      "id": 28,
+      "name": "Deluxe Burger",
+      "price": 420,
+      "rating": 4.9,
+      "category": "Premium",
+      "description": "Luxury taste with premium ingredients.",
+      "image": "/images/stefan-vladimirov-Q_Moi2xjieU-unsplash.jpg"
+    },
+    {
+      "id": 29,
+      "name": "Ultimate Burger",
+      "price": 470,
+      "rating": 5.0,
+      "category": "Premium",
+      "description": "The ultimate burger experience.",
+      "image": "/images/mae-mu-I7A_pHLcQK8-unsplash.jpg"
+    },
+    {
+      "id": 30,
+      "name": "Signature Burger",
+      "price": 399,
+      "rating": 4.8,
+      "category": "Chef's Special",
+      "description": "Chef's handcrafted signature burger.",
+      "image": "/images/odiseo-castrejon-1SPu0KT-Ejg-unsplash.jpg"
+    }
+  ]
+}

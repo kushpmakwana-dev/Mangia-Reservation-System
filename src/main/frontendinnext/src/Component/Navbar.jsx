@@ -1,67 +1,106 @@
-'use client'
-import {motion} from "framer-motion"
-import { Badge, LucideShoppingBag, ShoppingBag, ShoppingBagIcon, ShoppingBasket, ShoppingCart, ShoppingCartIcon } from "lucide-react";
-import Link from "next/link";
-import {useSelector} from "react-redux"
-const Navbar = () => {
+'use client';
 
-  const countCartItems = useSelector((state)=>state.cart.count)
+import { motion } from "framer-motion";
+import { HeartIcon, LucideShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
+const Navbar = () => {
+  const countCartItems = useSelector((state) => state.cart.cartCount);
+  const favouriteCartItems = useSelector(
+    (state) => state.cart.favouriteCount
+  );
+
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <motion.header
-    initial={{opacity:0,y:-10}}
-    animate={{opacity:1,y:0}}
-    transition={{duration:1}}
-    className="p-3 sticky top-0 z-[999] flex flex-row justify-around items-center md:text-4xl font-bold">
-      <h1 className="text-2xl md:text-2xl font-bold font-poppins text-accent">Mangia Reservation System</h1>
-      <nav>
-        <ul className="flex flex-row text-lg gap-5 font-light">
-          <motion.li 
-          
-          whileTap={{scale:0.9}}>
-            <Link href="/" className="relative group p-2 text-sm transition-colors duration-200 transform hover:bg-accent hover:text-background hover:scale-y-1 rounded-xl">
-              Home
-              {/* <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-current transition-all duration-300 group-hover:w-full"></span> */}
-            </Link>
-          </motion.li>
-          <motion.li
-                    whileTap={{scale:0.9}}>
+      initial={{ opacity: 0, y: -20 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        backgroundColor: scrolled
+          ? "rgba(255,255,255,0.95)"
+          : "rgba(255,255,255,0)",
+      }}
+      transition={{ duration: 0.3 }}
+      className={`sticky top-0 z-[999] flex justify-around items-center p-3 transition-all duration-300 ${
+        scrolled ? "backdrop-blur-md shadow-lg" : ""
+      }`}
+    >
+      {/* Logo */}
+      <h1 className="text-2xl font-bold font-poppins text-accent">
+        Mangia Reservation System
+      </h1>
 
-            <Link href="/" className="relative group p-2 text-sm transition-colors duration-200 transform hover:bg-accent hover:text-background hover:scale-y-1 rounded-xl">
-              Service
-              {/* <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-current transition-all duration-300 group-hover:w-full"></span> */}
-            </Link>
-          </motion.li>
-          <motion.li
-                    whileTap={{scale:0.9}}>
-            <Link href="/" className="relative group p-2 text-sm transition-colors duration-200 transform hover:bg-accent hover:text-background hover:scale-y-1 rounded-xl">
-              About Us
-              {/* <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-current transition-all duration-300 group-hover:w-full"></span> */}
-            </Link>
-          </motion.li>
-          <motion.li
-                    whileTap={{scale:0.9}}>
-            <Link href="/" className="relative group p-2 text-sm transition-colors duration-200 transform hover:bg-accent hover:text-background hover:scale-y-1 rounded-xl">
-              Contact Us
-              {/* <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-current transition-all duration-300 group-hover:w-full"></span> */}
-            </Link>
-          </motion.li>
+      {/* Navigation */}
+      <nav>
+        <ul className="flex gap-5 text-lg font-light">
+          {["Home", "Service", "About Us", "Contact Us"].map((item) => (
+            <motion.li key={item} whileTap={{ scale: 0.9 }}>
+              <Link
+                href="/"
+                className="p-2 text-sm rounded-xl transition-all duration-200 hover:bg-accent hover:text-background"
+              >
+                {item}
+              </Link>
+            </motion.li>
+          ))}
         </ul>
       </nav>
-      <div className="right flex flex-row items-center gap-10">
-      <motion.button
-            whileTap={{scale:0.9}}
-            className="relative"
->
-        <LucideShoppingBag size={40} className="transition-colors duration-200 hover:bg-accent hover:text-background rounded-full p-2"/>
-        <span className={`count absolute top-0 right-0 ${countCartItems > 0 ? "bg-red-600 flex justify-center items-center rounded-full w-4 h-4 text-center text-[10px] text-background": "hidden"}`}>
-        {countCartItems}
-        </span>
-      </motion.button>
-      <motion.button
-      whileTap={{scale:0.9}}
-      className="w-20 text-xs bg-accent text-background hover:bg-foreground transition-all duration-300 p-2.5 rounded-full">
-        Sign Up
-      </motion.button>
+
+      {/* Right Side */}
+      <div className="flex items-center gap-10">
+        <div className="flex gap-3">
+          {/* Cart */}
+          <motion.button whileTap={{ scale: 0.9 }} className="relative">
+            <LucideShoppingBag
+              size={40}
+              className="rounded-full p-2 transition-colors duration-200 hover:bg-accent hover:text-background"
+            />
+
+            {countCartItems > 0 && (
+              <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] text-white">
+                {countCartItems}
+              </span>
+            )}
+          </motion.button>
+
+          {/* Favourite */}
+          <motion.button whileTap={{ scale: 0.9 }} className="relative">
+            <HeartIcon
+              size={40}
+              className="rounded-full p-2 transition-colors duration-200 hover:bg-accent hover:text-background"
+            />
+
+            {favouriteCartItems > 0 && (
+              <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] text-white">
+                {favouriteCartItems}
+              </span>
+            )}
+          </motion.button>
+        </div>
+
+        {/* Sign Up */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className="w-20 rounded-full bg-accent p-2.5 text-xs text-background transition-all duration-300 hover:bg-foreground"
+        >
+          Sign Up
+        </motion.button>
       </div>
     </motion.header>
   );
