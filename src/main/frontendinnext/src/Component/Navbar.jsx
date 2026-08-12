@@ -106,7 +106,7 @@ const Navbar = () => {
           whileTap={{ scale: 0.9 }}
           className="w-20 rounded-full bg-accent p-2.5 text-xs text-background transition-all duration-300 hover:bg-foreground"
         >
-          Sign Up
+          Sign In
         </motion.button>
       </div>
     </motion.header>

@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/redux/api/authApi';
 import { setCredentials } from '@/redux/slices/authSlice';
 import { jwtDecode } from 'jwt-decode'; // npm i jwt-decode
+import Link from 'next/link';
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -44,7 +46,7 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md space-y-5"
       >
-        <h1 className="text-2xl font-semibold text-center">Sign in</h1>
+        <h1 className="text-2xl font-semibold text-center">Sign In</h1>
 
         {error && (
           <p className="text-sm text-red-500 text-center">{error}</p>
@@ -57,6 +59,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="Enter your email"
             className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-black"
           />
         </div>
@@ -68,6 +71,7 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Enter your password"
             className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-black"
           />
         </div>
@@ -79,7 +83,11 @@ export default function LoginPage() {
         >
           {isLoading ? 'Signing in...' : 'Login'}
         </button>
+        <Link href="/auth/register" className="text-sm text-blue-500 hover:underline block text-center" >
+          Dont have an account? Sign up
+        </Link>
       </form>
     </div>
   );
 }
+ 

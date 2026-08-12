@@ -1,93 +1,112 @@
 "use client";
-
-import Image from "next/image";
 import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRightIcon } from "lucide-react";
+import {useDispatch} from "react-redux";
+import {register} from "@/redux/slices/authSlice";
+import Link from "next/link";
+import {useRegisterMutation} from "@/redux/api/authApi";
 
 const RegisterPage = () => {
-  const [registerData, setRegisterData] = useState({});
+
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [registerUser]=  useRegisterMutation();
+
+  const style = {
+    outline:"none",
+    backgroundColor:"white",
+    border: "1px solid #ccc",
+    padding: "8px",
+    borderRadius: "10px"
+  }
+
+  const handleRegister = async (e)=>{
+
+    e.preventDefault();
+
+    try{
+
+      const respone = await registerUser(registerData).unwrap()
+
+      dispatch(register(registerData));
+
+
+      
+    }catch(err){
+      console.error("Registration failed:", err);
+    }
+
+  }
+
 
   return (
-    <section className="w-full h-screen flex justify-center items-center ">
-      <div className="p-2  container   bg-linear-to-r from-white to-sky-50  w-200 h-fit  flex flex-row gap-2 rounded-2xl shadow-2xl">
-        <div className="img  relative w-1/2 h-122 rounded-2xl">
-          <Image
-            src="/images/register2.webp"
-            alt="register Img"
-            fill
-            className="object-cover rounded-2xl"
-            sizes="100%"
-          />
+    <section className="min-h-screen flex items-center justify-center bg-gray-50">
 
-          {/* Shadow overlay */}
-          <div className="absolute inset-0 rounded-2xl" />
+      <form onSubmit={handleRegister} className=" w-lg p-5 bg-white rounded-xl overflow-hidden flex flex-col shadow-2xl">
+        <div className="register relative p-4 text-zinc-700 text-center rounded-t-xl">
+          <h1 className="text-2xl font-bold">Register</h1>
         </div>
-        <div className="content flex flex-col gap-2 w-1/2">
-          <div className=" title w-full h-fit rounded-2xl">
-            <h1 className="p-2 font-bold text-accent font-poppins text-left text-3xl">
-              SIGN UP
-            </h1>
-              <hr/>
-          </div>
-          <div className="input-box flex flex-col gap-3 px-2">
-            <label htmlFor="name" className="font-extralight text-lg">
-              Name:
-            </label>
+        <span className=" absolute bottom-0 h-1.5 w-full bg-linear-tor from-blue-800 to-violet-900"></span>
+        <div className="form-container flex flex-col gap-2 bg-white">
+          <div className="label-input flex flex-col gap-2">
+
+            <label htmlFor="name" className="text-medium font-semibold">Name :</label>
             <input
               type="text"
-              name="name"
-              required
-              autoFocus
-              aria-label="name"
-              className="border rounded-lg h-10 p-2 "
-              placeholder="Enter your Name"
-            />
-            <label htmlFor="name" className="font-medium text-lg">
-              Email Id:
-            </label>
+              id="name"
+              value={registerData.name}
+              onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
+              placeholder="Enter your name"
+              style={style}
+            />  
+
+          </div>
+          <div className="label-input flex flex-col gap-2">
+
+            <label htmlFor="email" className="text-sm font-semibold">Email :</label>
             <input
               type="email"
-              name="email"
-              required
-              autoFocus
-              aria-label="name"
-              className="border rounded-lg h-10 p-2 "
-              placeholder="Enter your Email Id"
-            />
-            <label htmlFor="name" className="font-medium text-lg">
-              Create a Password:
-            </label>
+              id="email"
+              value={registerData.email}
+              onChange={(e) => setRegisterData({...registerData, email: e.target.value})}
+              placeholder="Enter your email"
+              style={style}
+            />  
+
+          </div>
+          <div className="label-input flex flex-col gap-2">
+
+            <label htmlFor="password" className="text-sm font-semibold">Password :</label>
             <input
               type="password"
-              name="confirm-password"
-              required
-              autoFocus
-              aria-label="name"
-              className="border rounded-lg h-10 p-2 "
-              placeholder="Enter Password "
-            />
-            <label htmlFor="name" className="font-medium text-lg">
-              Confirm Password:
-            </label>
-            <input
-              type="password"
-              name="confirm-password"
-              required
-              autoFocus
-              aria-label="name"
-              className="border rounded-lg h-10 p-2 "
-              placeholder="Enter Password "
-            />
-          <div className="button-container mt-3 w-full flex gap-2 ">
-            <button className="p-2 bg-blue-400 text-white font-bold rounded-xl w-full transform transition-all duration-300 hover:-translate-y-2  shadow-2xl">
-              Submit
-            </button>
-            <button className="p-2 bg-white text-black font-bold rounded-xl w-full transform transition-color duration-300 hover:-translate-y-2 shadow-2xl ">
-              Reset
-            </button>
+              id="password"
+              value={registerData.password}
+              onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
+              placeholder="Enter your password"
+              style={style}
+            />  
+
           </div>
-          </div>
+          <motion.button 
+          whileTap={{ scale: 0.95 }}
+          type="submit" className="mt-4 bg-black flex flex-row items-center justify-center gap-2 text-sm font-semibold
+           text-white py-2.5  px-4 rounded-xl hover:bg-gray-800 transition-colors">
+            {/* {isLoading ? 'Registering...' : 'Register'} */}
+            Register
+            <ArrowRightIcon size="20"/>
+          </motion.button>
+          <div className="login-redirect">
+          <Link href="/auth/login">Already have an account? Sign In</Link>
         </div>
-      </div>
+        </div>    
+        
+      </form>
+
     </section>
   );
 };
