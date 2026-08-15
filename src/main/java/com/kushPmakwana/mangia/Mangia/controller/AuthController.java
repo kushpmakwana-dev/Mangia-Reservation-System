@@ -34,7 +34,6 @@ public class AuthController {
            HttpServletRequest request,
            HttpServletResponse response
     ){
-        Authentication authentication = authService.login(req, request, response);
-        return ResponseEntity.ok(LoginResponse.build(authentication.getPrincipal()));
+        return ResponseEntity.ok(authService.login(req, request, response));
     }
 }

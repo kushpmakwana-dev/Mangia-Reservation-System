@@ -292,7 +292,7 @@ public class ReservationService extends BaseService<Reservation, ReservationRepo
     }
 
     @Override
-    protected String getEntityName() {
+    protected String getEntityName()     {
         return "RESERVATION ENTITY";
     }
 }

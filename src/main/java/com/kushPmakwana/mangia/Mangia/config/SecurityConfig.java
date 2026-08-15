@@ -13,6 +13,9 @@ import com.kushPmakwana.mangia.Mangia.repository.OwnerRepository;
 import com.kushPmakwana.mangia.Mangia.repository.UserRepository;
 import com.kushPmakwana.mangia.Mangia.security.CurrentLoggedInUser;
 import com.kushPmakwana.mangia.Mangia.security.UserPrincipal;
+import com.kushPmakwana.mangia.Mangia.security.jwt.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +23,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,7 +37,11 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
@@ -61,88 +70,90 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
 
                 )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(
-            CustomerRepository customerRepository,
-            UserRepository userRepository,
-            OwnerRepository ownerRepository,
-            EmployeeRepository employeeRepository
-    ) {
-        return username -> {
-            User user = userRepository.findByEmail(username).orElseThrow(() -> new ResourcesNotFoundException("User Not Found", "SECURITY"));
-            switch (user.getRole()){
-                case CUSTOMER -> {
-                    Customer customer = customerRepository.findByEmail(username).orElseThrow(() -> new ResourcesNotFoundException("Customer Not Found", "Security"));
-                    return new UserPrincipal(
-                            user.getId(),
-                            username,
-                            user.getPassword(),
-                            Role.CUSTOMER,
-                            new CurrentLoggedInUser(
-                                    customer.getId(),
-                                    username,
-                                    customer.getFirstName() + " " + customer.getSecondName(),
-                                    Role.CUSTOMER
-                            )
-                    );
-                }
-
-                case OWNER -> {
-                    Owner owner = ownerRepository.findByOwnerEmail(username).orElseThrow(() -> new ResourcesNotFoundException("Owner Not Found", "Security"));
-                    return new UserPrincipal(
-                            user.getId(),
-                            username,
-                            user.getPassword(),
-                            Role.OWNER,
-                            new CurrentLoggedInUser(
-                                    owner.getId(),
-                                    username,
-                                    owner.getOwnerName(),
-                                    Role.OWNER
-                            )
-                    );
-                }
-
-                case ADMIN -> {
-                    return new UserPrincipal(
-                            user.getId(),
-                            username,
-                            user.getPassword(),
-                            Role.ADMIN,
-                            new CurrentLoggedInUser(
-                                    null,
-                                    username,
-                                    "Kush Pradeep Makwana",
-                                    Role.ADMIN
-
-                            )
-                    );
-                }
-
-                case EMPLOYEE -> {
-                    Employee employee = employeeRepository.findByEmployeeEmail(username)
-                            .orElseThrow(() -> new ResourcesNotFoundException("Employee Not Found", "USER-LOGIN"));
-                    return new UserPrincipal(
-                            user.getId(),
-                            username,
-                            user.getPassword(),
-                            Role.EMPLOYEE,
-                            new CurrentLoggedInUser(
-                                    employee.getId(),
-                                    username,
-                                    employee.getEmployeeFirstName() + " " + employee.getEmployeeLastName(),
-                                    Role.EMPLOYEE
-                            )
-                    );
-                }
-
-                default -> throw new InvalidRoleException("NOT A VALID ROLE");
-            }
-        };
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(
+//            CustomerRepository customerRepository,
+//            UserRepository userRepository,
+//            OwnerRepository ownerRepository,
+//            EmployeeRepository employeeRepository
+//    ) {
+//        return username -> {
+//            User user = userRepository.findByEmail(username).orElseThrow(() -> new ResourcesNotFoundException("User Not Found", "SECURITY"));
+//            switch (user.getRole()){
+//                case CUSTOMER -> {
+//                    Customer customer = customerRepository.findByEmail(username).orElseThrow(() -> new ResourcesNotFoundException("Customer Not Found", "Security"));
+//                    return new UserPrincipal(
+//                            user.getId(),
+//                            username,
+//                            user.getPassword(),
+//                            Role.CUSTOMER,
+//                            new CurrentLoggedInUser(
+//                                    customer.getId(),
+//                                    username,
+//                                    customer.getFirstName() + " " + customer.getSecondName(),
+//                                    Role.CUSTOMER
+//                            )
+//                    );
+//                }
+//
+//                case OWNER -> {
+//                    Owner owner = ownerRepository.findByOwnerEmail(username).orElseThrow(() -> new ResourcesNotFoundException("Owner Not Found", "Security"));
+//                    return new UserPrincipal(
+//                            user.getId(),
+//                            username,
+//                            user.getPassword(),
+//                            Role.OWNER,
+//                            new CurrentLoggedInUser(
+//                                    owner.getId(),
+//                                    username,
+//                                    owner.getOwnerName(),
+//                                    Role.OWNER
+//                            )
+//                    );
+//                }
+//
+//                case ADMIN -> {
+//                    return new UserPrincipal(
+//                            user.getId(),
+//                            username,
+//                            user.getPassword(),
+//                            Role.ADMIN,
+//                            new CurrentLoggedInUser(
+//                                    null,
+//                                    username,
+//                                    "Kush Pradeep Makwana",
+//                                    Role.ADMIN
+//
+//                            )
+//                    );
+//                }
+//
+//                case EMPLOYEE -> {
+//                    Employee employee = employeeRepository.findByEmployeeEmail(username)
+//                            .orElseThrow(() -> new ResourcesNotFoundException("Employee Not Found", "USER-LOGIN"));
+//                    return new UserPrincipal(
+//                            user.getId(),
+//                            username,
+//                            user.getPassword(),
+//                            Role.EMPLOYEE,
+//                            new CurrentLoggedInUser(
+//                                    employee.getId(),
+//                                    username,
+//                                    employee.getEmployeeFirstName() + " " + employee.getEmployeeLastName(),
+//                                    Role.EMPLOYEE
+//                            )
+//                    );
+//                }
+//
+//                default -> throw new InvalidRoleException("NOT A VALID ROLE");
+//            }
+//        };
+//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
