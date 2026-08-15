@@ -83,10 +83,10 @@ const Banner = () => {
                 scale: 0.95,
               }}
               className="bg-accent text-white px-7 py-4 rounded-xl text-lg font-semibold
-              shadow-[5px_10px_10px_black]
+              shadow-2xl
               "
             >
-              Order Now
+              Reserve Now
             </motion.button>
 
             <motion.button
@@ -97,7 +97,7 @@ const Banner = () => {
                 scale: 0.95,
               }}
               className=" border-accent text-accent px-7 py-4 rounded-xl text-lg font-semibold
-                            shadow-[5px_10px_10px_gray]
+                            shadow-2xl
 
               "
             >
