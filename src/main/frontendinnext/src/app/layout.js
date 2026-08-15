@@ -26,8 +26,7 @@ export default function RootLayout({ children }) {
       className={`text-poppins h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-          <CustomCursor />
-       
+          <CustomCursor />       
          <ReduxProvider> <Navbar />{children}</ReduxProvider>
       </body>
     </html>

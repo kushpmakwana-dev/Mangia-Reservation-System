@@ -1,17 +1,24 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { useLoginMutation } from '@/redux/api/authApi';
-import { setCredentials } from '@/redux/slices/authSlice';
-import { jwtDecode } from 'jwt-decode'; // npm i jwt-decode
-import Link from 'next/link';
-
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "@/redux/api/authApi";
+import { setCredentials } from "@/redux/slices/authSlice";
+import { jwtDecode } from "jwt-decode"; // npm i jwt-decode
+import Link from "next/link";
+import {
+  KeyboardOffIcon,
+  KeyIcon,
+  KeySquareIcon,
+  LogIn,
+  LucideOctagonPause,
+  UserKeyIcon,
+} from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
@@ -19,75 +26,101 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
       const res = await login({ email, password }).unwrap();
-
 
       const decoded = jwtDecode(res.token);
       const role = decoded.role || res.user?.role;
 
       dispatch(setCredentials({ user: res.user, token: res.token }));
 
-      
       document.cookie = `token=${res.token}; path=/; max-age=86400`;
-
 
       router.push(`/${role}`); // e.g. /admin or /user
     } catch (err) {
-      setError(err?.data?.message || 'Invalid email or password');
-    }
+      setError(err?.data?.message || "Invalid email or password");
+    } 
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white p-8 rounded-xl shadow-md space-y-5"
+    <section className="h-screen w-full bg-linear-to-b from-sky-400/20 to-white flex justify-center items-center ">
+      <section
+        className="card p-5 border border-black/10 rounded-3xl 
+      shadow-2xl 
+       flex flex-col justify-center  items-center gap-5  bg-linear-to-b from-sky-400/30 via-white to-white h-fit min-w-130 w-130 
+       tranisition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-2xl
+       "
       >
-        <h1 className="text-2xl font-semibold text-center">Sign In</h1>
-
-        {error && (
-          <p className="text-sm text-red-500 text-center">{error}</p>
-        )}
-
-        <div>
-          <label className="block text-sm mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="Enter your email"
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-black"
-          />
+        <div className="top mt-4 p-2 bg-white/80  rounded-3xl shadow-2xl w-fit  ">
+          <LogIn size={50} className=" text-black/70 font-bold " />
         </div>
-
-        <div>
-          <label className="block text-sm mb-1">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Enter your password"
-            className="w-full border rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-black"
-          />
+        <div className="content">
+          <h1 className="font-bold text-2xl text-center text-black/90 ">
+            Sign In With Email
+          </h1>
+          <p className="text-center text-black/40 text-lg  px-15">
+            Welcome back! Please enter your details to sign in.
+          </p>
         </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-black text-white rounded-md py-2 disabled:opacity-50"
+        <form
+          onSubmit={handleSubmit}
+          className="form  flex flex-col gap-3  w-full px-20 p-5 "
         >
-          {isLoading ? 'Signing in...' : 'Login'}
-        </button>
-        <Link href="/auth/register" className="text-sm text-blue-500 hover:underline block text-center" >
-          Dont have an account? Sign up
-        </Link>
-      </form>
-    </div>
+          <div className="relative  ">
+            <img
+              src="/images/mail.png"
+              alt="icon-admin"
+              className="absolute top-3.5 left-3 w-5.5 h-5 "
+            />
+
+            <input
+              type="text"
+              placeholder="Email"
+              autoComplete="email"
+              autoFocus="required"
+              required
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              className="p-3  w-full shadow-2xl rounded-2xl px-10 bg-gray-100/40 "
+            />
+          </div>
+          <div className="relative ">
+            <img
+              src="/images/lock.png"
+              alt="icon-admin"
+              className="absolute top-4 left-3 w-5.5 h-5  "
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              className="p-3 w-full   shadow-2xl rounded-2xl px-10 bg-gray-100/40  "
+            />
+          </div>
+          <div className="forget p-2 w-full">
+            <p className="text-right text-black/60"><Link href="/">forget password?</Link></p>
+          </div>
+          <button className="p-4 bg-black text-white text-xl rounded-3xl tranisition-all duration-300 transform hover:-translate-y-1.5 hover:shadow-2xl ">
+            Get Started
+          </button>
+          <div className="register">
+            <p className="text-center text-black/60">
+              Or {" "}
+              <span className="text-black/90">
+                <Link href="/auth/register">Register Here</Link>
+              </span>
+            </p>
+          </div>
+        </form>
+      </section>
+    </section>
   );
 }
- 
