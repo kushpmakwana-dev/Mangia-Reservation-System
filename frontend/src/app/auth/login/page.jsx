@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setCredentials } from "@/redux/slices/authSlice";
-import { jwtDecode } from "jwt-decode"; // npm i jwt-decode
 import Link from "next/link";
 import {
   KeyboardOffIcon,
@@ -31,10 +30,9 @@ export default function LoginPage() {
     try {
       const res = await login({ email, password }).unwrap();
 
-      const decoded = jwtDecode(res.token);
-      const role = decoded.role || res.user?.role;
 
-      dispatch(setCredentials({ user: res.user, token: res.token }));
+
+dispatch(setCredentials({ user: res.user, token: res.token }));
 
       document.cookie = `token=${res.token}; path=/; max-age=86400`;
 
