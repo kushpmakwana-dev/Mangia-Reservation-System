@@ -41,7 +41,7 @@ const Navbar = () => {
           : "rgba(255,255,255,0)",
       }}
       transition={{ duration: 0.3 }}
-      className={`sticky top-0 z-[999] flex justify-around items-center p-3 transition-all duration-300 ${
+      className={`sticky top-0 z-999 flex justify-around items-center p-3 transition-all duration-300 ${
         scrolled ? "backdrop-blur-md shadow-lg" : ""
       }`}
     >

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/redux/slices/authSlice";
-import { authApi } from "./api/authApi";
+import baseApi from "./baseApi/baseApi";
 import cartReducer from "./slices/cartSlice";
 
 export const makeStore = () =>
@@ -8,10 +8,12 @@ export const makeStore = () =>
     reducer: {
       auth: authReducer,
       cart: cartReducer,
-      [authApi.reducerPath]: authApi.reducer,
+      [baseApi.reducerPath]: baseApi.reducer,
     },
+
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(authApi.middleware),
+      getDefaultMiddleware().concat(baseApi.middleware),
+    
   });
 
 export const store = makeStore();

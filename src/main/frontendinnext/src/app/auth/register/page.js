@@ -6,13 +6,19 @@ import {useDispatch} from "react-redux";
 import {register} from "@/redux/slices/authSlice";
 import Link from "next/link";
 import {useRegisterMutation} from "@/redux/api/authApi";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
 
+
+  const navigate = useRouter()
+  const dispatch = useDispatch();
   const [registerData, setRegisterData] = useState({
-    name: "",
+    firstName:"",
+    secondName:"",
     email: "",
     password: "",
+    phoneNumber:""
   });
 
   const [registerUser]=  useRegisterMutation();
@@ -33,16 +39,15 @@ const RegisterPage = () => {
 
       const respone = await registerUser(registerData).unwrap()
 
-      dispatch(register(registerData));
+      console.log("responese-?>",respone)
 
+      dispatch(register(respone));
+      navigate.push("/");
 
-      
     }catch(err){
       console.error("Registration failed:", err);
     }
-
   }
-
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -55,17 +60,31 @@ const RegisterPage = () => {
         <div className="form-container flex flex-col gap-2 bg-white">
           <div className="label-input flex flex-col gap-2">
 
-            <label htmlFor="name" className="text-medium font-semibold">Name :</label>
+            <label htmlFor="firstname" className="text-medium font-semibold">First Name :</label>
             <input
               type="text"
-              id="name"
-              value={registerData.name}
-              onChange={(e) => setRegisterData({...registerData, name: e.target.value})}
+              id="firstname"
+              value={registerData.firstName}
+              onChange={(e) => setRegisterData({...registerData, firstName: e.target.value})}
               placeholder="Enter your name"
               style={style}
             />  
 
           </div>
+          <div className="label-input flex flex-col gap-2">
+
+            <label htmlFor="secondname" className="text-medium font-semibold">Second Name :</label>
+            <input
+              type="text"
+              id="secondname"
+              value={registerData.secondName}
+              onChange={(e) => setRegisterData({...registerData, secondName: e.target.value})}
+              placeholder="Enter your name"
+              style={style}
+            />  
+
+          </div>
+          
           <div className="label-input flex flex-col gap-2">
 
             <label htmlFor="email" className="text-sm font-semibold">Email :</label>
@@ -88,6 +107,18 @@ const RegisterPage = () => {
               value={registerData.password}
               onChange={(e) => setRegisterData({...registerData, password: e.target.value})}
               placeholder="Enter your password"
+              style={style}
+            />  
+
+          </div>
+          <div className="label-input flex flex-col gap-2">
+            <label htmlFor="phoneNumber" className="text-medium font-semibold">Phone Number :</label>
+            <input
+              type="text"
+              id="phoneNumber"
+              value={registerData.phoneNumber}
+              onChange={(e) => setRegisterData({...registerData, phoneNumber: e.target.value})}
+              placeholder="Enter your name"
               style={style}
             />  
 
